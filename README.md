@@ -1,4 +1,4 @@
-Chips
-.
-.
-. Hello George!
+# Chips
+
+list:  
+* Hello Cyrille!  
