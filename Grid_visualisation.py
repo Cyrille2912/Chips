@@ -1,5 +1,6 @@
 from Tkinter import *
 
+import gate_lists
 ##   n = 17
 ##   m = 12 
 
@@ -23,7 +24,7 @@ def grid_init(m , n, list_tpl_nodes):
     root = Tk()
     root.geometry("1000x650")
 
-    canvas_1 = Canvas(root, height = (m +2) * line_length,
+    canvas_1 = Canvas(root, height = (m + 2) * line_length,
                       width = (n + 2) * line_length, bg="white")
     for i in x_list:
         canvas_1.create_line(i, y_list[0], i, y_list[m - 1])
@@ -38,8 +39,6 @@ def grid_init(m , n, list_tpl_nodes):
                                   x_node + sq_hsize, y_node + sq_hsize,
                                   fill="red", outline = "red")
 
+
     canvas_1.pack()
     root.mainloop()
-
-
-def 
