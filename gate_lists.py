@@ -23,7 +23,6 @@ def make_gate_list(filename):
         gate_name.append(line[0])
         y_coordinates.append(int(line[1]))
         x_coordinates.append(int(line[2]))
-        print line[0] + ":", int(line[1]), int(line[2])
 
     return zip(gate_name, x_coordinates, y_coordinates)
 
