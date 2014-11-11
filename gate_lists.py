@@ -27,6 +27,7 @@ def make_gate_list(filename):
     return zip(gate_name, x_coordinates, y_coordinates)
 
 gate_list_1 = make_gate_list(f_input_1)
+print gate_list_1
 gate_list_2 = make_gate_list(f_input_2)
 
         
