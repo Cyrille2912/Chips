@@ -1,4 +1,3 @@
-
 #
 # Chips & Circuits
 #
@@ -21,7 +20,7 @@ def make_gate_list(filename):
     y_coordinates = []
 
     for line in filename:
-        gate_name.append(line[0])
+        gate_name.append(int(line[0]))
         y_coordinates.append(int(line[1]))
         x_coordinates.append(int(line[2]))
 
