@@ -14,9 +14,9 @@ f_input_2 = csv.reader(open("gates_grid2.csv"))
 
 
 def make_gate_list(filename):
-	"""
-	Returns a list with the gates's name and its coordinates (x, y).
-	"""
+    """
+    Returns a list with the gates's name and its coordinates (x, y).
+    """
     line = filename.next()
     gate_name = []
     x_coordinates = []
