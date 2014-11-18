@@ -1,5 +1,5 @@
 from Tkinter import *
-import csv
+import csv, string, random
 
 class Field(object):
     def grid_init(self, m , n, list_tpl_nodes):
@@ -17,7 +17,7 @@ class Field(object):
         for i in range(m):
             y_list.append((i + 1) * unit_length)
 
-        root.wm_title('Chips & Circuits') = Tk()
+        root = Tk()
         root.geometry("1000x1000")
 
         canvas_1 = Canvas(root, height = (m + 2) * unit_length,
@@ -109,9 +109,253 @@ class Field(object):
 
     #net1 = net_coordinates(gate_list_1, net_list1)
 
-    def connect_gates(self, netlists):
+    def line_distance(self, netlists):
         """
         Connects the gates according to the net list.
         """
+        horizontal = []
+        vertical = []
+
         for coordinates in netlists:
+                horizontal.append(coordinates[0][0] - coordinates[1][0])
+                vertical.append(coordinates[0][1] - coordinates[1][1])
+
+        return zip(horizontal,vertical)
+
+    def draw_line(self, distances, gate_coordinates, list_tpl_nodes):
+        """"""
+        unit_length = 40
+        # half size of nodes
+        sq_hsize = 10
+
+        x_list = []
+        y_list = []
+
+        for i in range(18):
+            x_list.append((i + 1) * unit_length)
+
+        for i in range(13):
+            y_list.append((i + 1) * unit_length)
+
+        root = Tk()
+        root.geometry("1000x1000")
+
+        canvas_1 = Canvas(root, height = (13 + 2) * unit_length,
+                          width = (18 + 2) * unit_length, bg="white")
+        for i in x_list:
+            canvas_1.create_line(i, y_list[0], i, y_list[13 - 1])
+
+        for j in y_list:
+            canvas_1.create_line(x_list[0], j, x_list[18 - 1], j)
+
+        for node in list_tpl_nodes:
+            x_node = (node[1] + 1) * unit_length
+            y_node = (node[2] + 1) * unit_length
+            canvas_1.create_rectangle(x_node - sq_hsize, y_node - sq_hsize,
+                                      x_node + sq_hsize, y_node + sq_hsize,
+                                      fill="red", outline = "red")
+
+        line_count = 0    
+        for i in range(len(distances)):
+            if distances[i][0] > 0 and distances[i][1] > 0:
+                choices = []
+                
+                for x in range(distances[i][0]):
+                    choices.append(tuple([1,0]))
+                for y in range(distances[i][1]):
+                    choices.append(tuple([0,1]))    
+                    
+                x = gate_coordinates[i][0][0]
+                y = gate_coordinates[i][0][1]
+                length = len(choices)
+
+                while length > 0:
+                    random_pick = random.choice(choices)
+
+                    if random_pick == (0,1):
+                        canvas_1.create_line((x+1) * unit_length, (y+1)* unit_length, (x+1)* unit_length, ((y-1)+1)* unit_length, fill='blue', width='4')
+                        y -= 1
+                        choices.remove(random_pick)
+                        length -= 1
+                        line_count += 1 
+                    elif random_pick == (1,0):
+                        canvas_1.create_line((x+1)* unit_length , (y+1)* unit_length, ((x-1)+1)* unit_length, (y+1)* unit_length, fill='blue', width='4')
+                        x -= 1
+                        choices.remove(random_pick)
+                        length -= 1
+                        line_count += 1  
+
+            elif distances[i][0] > 0 and distances[i][1] < 0:
+                choices = []
+                
+                for x in range(distances[i][0]):
+                    choices.append(tuple([1,0]))
+
+                for y in range(abs(distances[i][1])):
+                    choices.append(tuple([0,1]))    
+                    
+                x = gate_coordinates[i][0][0]
+                y = gate_coordinates[i][0][1]
+                length = len(choices)
+
+                while length > 0:
+                    random_pick = random.choice(choices)
+
+                    if random_pick == (0,1):
+                        canvas_1.create_line((x+1) * unit_length, (y+1)* unit_length, (x+1)* unit_length, ((y+1)+1)* unit_length, fill='blue', width='4')
+                        y += 1
+                        choices.remove(random_pick)
+                        length -= 1
+                        line_count += 1    
+                    elif random_pick == (1,0):
+                        canvas_1.create_line((x+1)* unit_length , (y+1)* unit_length, ((x-1)+1)* unit_length, (y+1)* unit_length, fill='blue', width='4')
+                        x -= 1
+                        choices.remove(random_pick)
+                        length -= 1
+                        line_count += 1 
+
+            elif distances[i][0] < 0 and distances[i][1] > 0:
+                choices = []
+                
+                for x in range(abs(distances[i][0])):
+                    choices.append(tuple([1,0]))
+
+                for y in range(distances[i][1]):
+                    choices.append(tuple([0,1]))    
+                    
+                x = gate_coordinates[i][0][0]
+                y = gate_coordinates[i][0][1]
+                length = len(choices)
+
+                while length > 0:
+                    random_pick = random.choice(choices)
+
+                    if random_pick == (0,1):
+                        canvas_1.create_line((x+1) * unit_length, (y+1)* unit_length, (x+1)* unit_length, ((y-1)+1)* unit_length, fill='blue', width='4')
+                        y -= 1
+                        choices.remove(random_pick)
+                        length -= 1
+                        line_count += 1    
+                    elif random_pick == (1,0):
+                        canvas_1.create_line((x+1)* unit_length , (y+1)* unit_length, ((x+1)+1)* unit_length, (y+1)* unit_length, fill='blue', width='4')
+                        x += 1
+                        choices.remove(random_pick)
+                        length -= 1
+                        line_count += 1 
+
+            elif distances[i][0] < 0 and distances[i][1] < 0:
+                choices = []
+                
+                for x in range(abs(distances[i][0])):
+                    choices.append(tuple([1,0]))
+
+                for y in range(abs(distances[i][1])):
+                    choices.append(tuple([0,1]))    
+                    
+                x = gate_coordinates[i][0][0]
+                y = gate_coordinates[i][0][1]
+                length = len(choices)
+
+                while length > 0:
+                    random_pick = random.choice(choices)
+
+                    if random_pick == (0,1):
+                        canvas_1.create_line((x+1) * unit_length, (y+1)* unit_length, (x+1)* unit_length, ((y+1)+1)* unit_length, fill='blue', width='4')
+                        y += 1
+                        choices.remove(random_pick)
+                        length -= 1 
+                        line_count += 1   
+                    elif random_pick == (1,0):
+                        canvas_1.create_line((x+1)* unit_length , (y+1)* unit_length, ((x+1)+1)* unit_length, (y+1)* unit_length, fill='blue', width='4')
+                        x += 1
+                        choices.remove(random_pick)
+                        length -= 1 
+                        line_count += 1
+
+            elif distances[i][0] == 0 and distances[i][1] > 0:
+                choices = []
+
+                for y in range(distances[i][1]):
+                    choices.append(tuple([0,1]))    
+                
+                x = gate_coordinates[i][0][0]    
+                y = gate_coordinates[i][0][1]
+                length = len(choices)
+
+                while length > 0:
+                    random_pick = random.choice(choices)
+
+                    if random_pick == (0,1):
+                        canvas_1.create_line((x+1) * unit_length, (y+1)* unit_length, (x+1)* unit_length, ((y-1)+1)* unit_length, fill='blue', width='4')
+                        y -= 1
+                        choices.remove(random_pick)
+                        length -= 1
+                        line_count += 1    
+
+            elif distances[i][0] == 0 and distances[i][1] < 0:
+                choices = []
+
+                for y in range(abs(distances[i][1])):
+                    choices.append(tuple([0,1]))    
+                
+                x = gate_coordinates[i][0][0]    
+                y = gate_coordinates[i][0][1]
+                length = len(choices)
+
+                while length > 0:
+                    random_pick = random.choice(choices)
+
+                    if random_pick == (0,1):
+                        canvas_1.create_line((x+1) * unit_length, (y+1)* unit_length, (x+1)* unit_length, ((y+1)+1)* unit_length, fill='blue', width='4')
+                        y += 1
+                        choices.remove(random_pick)
+                        length -= 1 
+                        line_count += 1 
+
+            elif distances[i][0] > 0 and distances[i][1] == 0:
+                choices = []
+                
+                for x in range(distances[i][0]):
+                    choices.append(tuple([1,0]))
+
+                x = gate_coordinates[i][0][0]
+                y = gate_coordinates[i][0][1]
+                length = len(choices)
+
+                while length > 0:
+                    random_pick = random.choice(choices)
+
+                    if random_pick == (1,0):
+                        canvas_1.create_line((x+1)* unit_length , (y+1)* unit_length, ((x-1)+1)* unit_length, (y+1)* unit_length, fill='blue', width='4')
+                        x -= 1
+                        choices.remove(random_pick)
+                        length -= 1 
+                        line_count += 1
+
+            elif distances[i][0] < 0 and distances[i][1] == 0:
+                choices = []
+                
+                for x in range(distances[i][0]):
+                    choices.append(tuple([1,0]))
+
+                x = gate_coordinates[i][0][0]
+                y = gate_coordinates[i][0][1]
+                length = len(choices)
+
+                while length > 0:
+                    random_pick = random.choice(choices)
+
+                    if random_pick == (1,0):
+                        canvas_1.create_line((x+1)* unit_length , (y+1)* unit_length, ((x+1)+1)* unit_length, (y+1)* unit_length, fill='blue', width='4')
+                        x += 1
+                        choices.remove(random_pick)
+                        length -= 1  
+                        line_count += 1
+
+        print line_count                   
+        canvas_1.pack()
+        root.mainloop() 
+
+
+
             
