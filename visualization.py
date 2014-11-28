@@ -23,7 +23,7 @@ class Window:
         self.height = window_height
         self.master = master
 
-        self.button_width = 15
+        self.button_width = 20
 
         self.layer_depth = layer_depth
 
