@@ -1,4 +1,0 @@
-# Chips
-
-list:  
-* Hello Cyrille!  
