@@ -45,8 +45,8 @@ class Window:
         self.button_frame.pack(side = RIGHT)
         
         # initialize the listbox
-        self.grid_listbox = Listbox(self.button_frame, width = self.button_width,\
-            height = 7)
+        self.grid_listbox = Listbox(self.button_frame, width = self.button_width / 2,\
+            height = 6)
         self.grid_listbox.pack(side = TOP)
 
         for Grid_Net in ["Grid1: Net1", "Grid1: Net2", "Grid1: Net3", "Grid2: Net1",
