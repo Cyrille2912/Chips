@@ -39,7 +39,6 @@ class Field(object):
         canvas_1.pack()
         root.mainloop()
 
-
     def make_gate_list(self, filename):
         """
         Returns a list with the gates's name and its coordinates (x, y).
@@ -83,10 +82,12 @@ class Field(object):
 
         return zip(gates1, gates2)
 
+
+    f_input_1 = csv.reader(open("gates_grid1.csv"))
+    f_input_2 = csv.reader(open("gates_grid2.csv"))
     #net_list1 = make_net_list(f_input1)
     #net_list2 = make_net_list(f_input2)
     #net_list3 = make_net_list(f_input3)
-
 
     def net_coordinates(self, gates, nets):
         """
@@ -107,8 +108,37 @@ class Field(object):
                                 
         return zip(gate_coordinates_from, gate_coordinates_to)
 
-    net1 = net_coordinates(gate_list_1, net_list1)
+    #net1 = net_coordinates(gate_list_1, net_list1)
 
+    def sorted_list(self, net_coordinates):
+
+        distance = []
+        priority_queue = []
+
+        for i in range(len(net_coordinates)):
+            dist = abs(net_coordinates[i][0][0] - net_coordinates[i][1][0]) + abs(net_coordinates[i][0][1] - net_coordinates[i][1][1])
+            distance.append(dist)
+       
+        priority_queue = zip(net_coordinates, distance)
+
+        for i in range(len(priority_queue)):
+            minimum = int(i)
+            swap = 0
+            for j in range(minimum+1, len(priority_queue)):
+                if (priority_queue[j][1] < priority_queue[minimum][1]):
+                    minimum = j
+            if (minimum != i):
+                swap = priority_queue[i]
+                priority_queue[i] = priority_queue[minimum]
+                priority_queue[minimum] = swap
+
+        final_queue = []
+
+        for i in range(len(priority_queue)):
+            final_queue.append(priority_queue[i][0])
+
+        return final_queue    
+        
     def line_distance(self, netlists):
         """
         Connects the gates according to the net list.
