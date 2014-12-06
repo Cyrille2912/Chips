@@ -208,7 +208,7 @@ the_list = zip(begin_coordinates,end_coordinates)
 
 print the_list
 #return the_list
-
+counter = 0
 # display the map with the route added
 print 'Map:'
 for y in range(m):
@@ -219,16 +219,19 @@ for y in range(m):
         elif xy == 1:
             print 'O', # obstacle
         elif xy == 2:
-            print 'S', # start
+            print 'G', # start
+            counter+=1
         elif xy == 3:
             print 'R', # route
         elif xy == 4:
             print 'F', # finish
         elif xy == 5:
-            print 'G', # finish    
+            print 'G', # finish   
+            counter+=1 
     print
 
 print lines
 print len(coordinates_points)
+print counter
 
 raw_input('Press Enter...')
