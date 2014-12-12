@@ -133,10 +133,10 @@ class Field(object):
                 priority_queue[minimum] = swap
 
         final_queue = []
-
         for i in range(len(priority_queue)):
-            final_queue.append(priority_queue[i][0])
+            final_queue.append(priority_queue[i])
 
+        # print final_queue    
         return final_queue    
         
     def line_distance(self, netlists):

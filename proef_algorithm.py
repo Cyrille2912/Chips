@@ -198,6 +198,7 @@ for i in range(len(priorityqueue)):
         end_x.append(x)
         end_y.append(y)
 
+
 print the_map
 #uitleg: begin en eind coordinaten worden in the list gezipt, maar er moet ook nog een laag variabele toegevoegd worden,
 # als die dus niet een lijn spant, kijk bij de return van de a_star algoritme.
