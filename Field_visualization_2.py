@@ -120,6 +120,7 @@ class Field(object):
             distance.append(dist)
        
         priority_queue = zip(net_coordinates, distance)
+        #priority_queue = zip(net_coordinates)
 
         for i in range(len(priority_queue)):
             minimum = int(i)

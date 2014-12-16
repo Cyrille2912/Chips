@@ -30,7 +30,7 @@ class node:
     # give higher priority to going straight instead of diagonally
     def nextMove(self, dirs, d): # d: direction to move
         if dirs == 6 and (d == 2 or d == 5):
-            self.distance += 5
+            self.distance += 10
         else:
             self.distance += 10
     # Estimation function for the remaining distance to the goal.
@@ -147,7 +147,7 @@ def pathFind(the_map, n, m, dirs, dx, dy, dz, xA, yA, zA, xB, yB, zB):
 def check_reserved(_tuple, _reserved):
     return _tuple in _reserved
 
-def a_star_algorithm(priorityqueue):
+def a_star_algorithm(priorityqueue, reserverd_queue=[((),())]):
 
     #print gates
     mastercounter = []
@@ -227,8 +227,8 @@ def a_star_algorithm(priorityqueue):
             zA = 0
             zB = 0
             
-            reserved_x = []
-            reserved_y = []
+            reserved_x = reserverd_queue[:len(reserverd_queue)/2]
+            reserved_y = reserverd_queue[len(reserverd_queue)/2:]
             _reserved_x = []
             _reserved_y = []
             for item in reserved_x:
@@ -250,7 +250,7 @@ def a_star_algorithm(priorityqueue):
                             if the_map[z][y][x] != 1:
                                  the_map[z][y][x] = 6
                 for z in range(0, 8):
-                    if z == 0:
+                    if z in range(3):
                         if (xA,yA) in _reserved_x:
                             for j in range(4):
                                 if the_map[z][yA][xA +fx[j]] != 1:
@@ -262,10 +262,12 @@ def a_star_algorithm(priorityqueue):
 
                         if (xA,yA) in _reserved_y:
                             for j in range(4):
-                                the_map[z][yA +fy[j]][xA] = 0 
+                                if the_map[z][yA + fy[j]][xA] != 1:
+                                    the_map[z][yA +fy[j]][xA] = 0 
                         if (xB,yB) in _reserved_y:
                             for j in range(4):
-                                the_map[z][yB +fy[j]][xB] = 0
+                                if the_map[z][yB + fy[j]][xB] != 1:
+                                    the_map[z][yB +fy[j]][xB] = 0
 
 
                     for i in range(len(gates)):
@@ -482,10 +484,11 @@ def a_star_algorithm(priorityqueue):
 
 net_lists = NetLists()
 gates = chip.make_gate_list(chip.f_input_1)
-nets = net_lists.netlist_1
+nets = net_lists.netlist_2
 coordinates_points = chip.net_coordinates(gates, nets)
 temp = chip.sorted_list(coordinates_points)
 priorityqueue = []
+
 for el in temp:
     priorityqueue.append(el[0])
 # print priorityqueue
@@ -496,29 +499,32 @@ print 'Number of total lines', len(nets)
 winning = []
 winning_linesteps = []
 winning_numberNodes = []
-for i in range(6000):
+for i in range(3000):
     priorityqueue = []
     board_temp = []
     end_temp = []
+    reserverd_queue = []
     for el in board[0]:
         priorityqueue.append(el)
     for el in board[1]:
         board_temp.append(el)
-    picker = random.choice([0, 9])
+    picker = random.choice(range(2))
+
     for i in range(picker): 
         choice = random.choice(board_temp)
         board_temp.remove(choice)
-        end_temp.append(choice)    
+        end_temp.append(choice) 
+    reserverd_queue = end_temp[:]   
     priorityqueue = priorityqueue+end_temp+board_temp
     # print priorityqueue
-    board = a_star_algorithm(priorityqueue)
+    board = a_star_algorithm(priorityqueue, reserverd_queue)
     print 'Random choices', picker    
     print 'Number of drawn lines', len(board[1])
     print 'Number of total lines', len(nets)
     winning.append(len(board[1]))
     winning_linesteps.append(board[2])
 for i in range(len(winning_linesteps)):
-    if winning[i] == 30:
+    if winning[i] >= 37:
         winning_numberNodes.append(winning_linesteps[i])
  
 print 'Winning', max(winning)
